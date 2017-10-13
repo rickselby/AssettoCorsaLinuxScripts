@@ -1,9 +1,8 @@
 #/bin/bash
-ASSETTO_DIR="/home/assettocorsa/steam/steamapps/common/Assetto Corsa Dedicated Server/"
-PIDFILE=/home/assettocorsa/acServer.pid
-LOGFILE=/home/assettocorsa/acServer.log
+ASSETTO_DIR="/home/steam/assetto/"
+PIDFILE="$ASSETTO_DIR/acServer.pid"
+LOGFILE="$ASSETTO_DIR/acServer.log"
 DAEMON="$ASSETTO_DIR/acServer"
-
 
 case $1 in
 	start)
@@ -12,12 +11,12 @@ case $1 in
 		# See: http://stackoverflow.com/questions/8251933/how-can-i-log-the-stdout-of-a-process-started-by-start-stop-daemon
 		start-stop-daemon --start \
 		                  --background \
-		                  --user assettocorsa \
+		                  --user steam \
 		                  --name acServer  \
 		                  --make-pidfile \
 		                  --pidfile $PIDFILE \
 		                  --chdir "$ASSETTO_DIR" \
-		                  --chuid assettocorsa \
+		                  --chuid steam \
 		                  --startas /bin/bash \
 		                  -- -c "exec \"$ASSETTO_DIR/acServer\" &> $LOGFILE"
 
@@ -29,7 +28,7 @@ case $1 in
 		;;
 	stop)
 		start-stop-daemon --stop \
-		                  --user assettocorsa \
+		                  --user steam \
 		                  --name acServer \
 		                  --pidfile $PIDFILE \
 		                  --retry 5
@@ -43,8 +42,8 @@ case $1 in
 		mv $LOGFILE $LOGFILE.last
 		;;
 	restart)
-                $0 stop && sleep 2 && $0 start
-                ;;
+		$0 stop && sleep 2 && $0 start
+		;;
 	status)
 		status="Not Running"
 		read pidtest < $PIDFILE &>/dev/null
